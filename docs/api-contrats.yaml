@@ -1,0 +1,176 @@
+openapi: 3.0.0
+info:
+  title: Coworking Spaces API
+  version: 1.0.0
+
+paths:
+  /api/v1/reservations:
+    post:
+      summary: Create a coworking space reservation
+      description: Creates a reservation for a selected coworking space.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - spaceId
+                - userId
+                - reservationDate
+                - startTime
+                - endTime
+                - numberOfPeople
+              properties:
+                spaceId:
+                  type: string
+                  format: uuid
+                  example: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                userId:
+                  type: string
+                  format: uuid
+                  example: "7fa85f64-5717-4562-b3fc-2c963f66afa6"
+                reservationDate:
+                  type: string
+                  format: date
+                  example: "2026-04-25"
+                startTime:
+                  type: string
+                  example: "09:00"
+                endTime:
+                  type: string
+                  example: "12:00"
+                numberOfPeople:
+                  type: integer
+                  example: 4
+                notes:
+                  type: string
+                  nullable: true
+                  example: "Reservation for team meeting."
+      responses:
+        "201":
+          description: Reservation created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservationId:
+                    type: string
+                    format: uuid
+                    example: "8fa85f64-5717-4562-b3fc-2c963f66afa6"
+                  userId:
+                    type: string
+                    format: uuid
+                  spaceId:
+                    type: string
+                    format: uuid
+                  reservationDate:
+                    type: string
+                    format: date
+                    example: "2026-04-25"
+                  startTime:
+                    type: string
+                    example: "09:00"
+                  endTime:
+                    type: string
+                    example: "12:00"
+                  numberOfPeople:
+                    type: integer
+                    example: 4
+                  totalPrice:
+                    type: number
+                    format: decimal
+                    example: 30000
+                  status:
+                    type: string
+                    example: "confirmed"
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: "2026-04-25T08:30:00Z"
+        "400":
+          description: Invalid reservation request.
+        "409":
+          description: The selected space is not available for the requested time.
+
+  /api/v1/spaces:
+    post:
+      summary: Create a coworking space
+      description: Creates a new coworking space available for reservations.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - description
+                - location
+                - capacity
+                - pricePerHour
+                - isAvailable
+              properties:
+                name:
+                  type: string
+                  example: "Central Work Hub"
+                description:
+                  type: string
+                  example: "Modern coworking space with meeting rooms, Wi-Fi and coffee area."
+                imageUrl:
+                  type: string
+                  nullable: true
+                  example: "https://example.com/images/central-work-hub.jpg"
+                location:
+                  type: string
+                  example: "San José, Costa Rica"
+                capacity:
+                  type: integer
+                  example: 12
+                pricePerHour:
+                  type: number
+                  format: decimal
+                  example: 10000
+                isAvailable:
+                  type: boolean
+                  example: true
+      responses:
+        "201":
+          description: Coworking space created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  spaceId:
+                    type: string
+                    format: uuid
+                    example: "2fa85f64-5717-4562-b3fc-2c963f66afa6"
+                  name:
+                    type: string
+                    example: "Central Work Hub"
+                  description:
+                    type: string
+                  imageUrl:
+                    type: string
+                    nullable: true
+                  location:
+                    type: string
+                    example: "San José, Costa Rica"
+                  capacity:
+                    type: integer
+                    example: 12
+                  pricePerHour:
+                    type: number
+                    format: decimal
+                    example: 10000
+                  isAvailable:
+                    type: boolean
+                    example: true
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: "2026-04-25T08:30:00Z"
+        "400":
+          description: Invalid coworking space data.
